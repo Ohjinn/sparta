@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@200&display=swap" rel="stylesheet">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <title>쇼핑몰</title>
+    <style>
+        * {
+            font-family: 'Azeret Mono', monospace;
+        }
+
+        .mytitle {
+            width: 600px;
+            height: 600px;
+            overflow: auto;
+            margin: 0px auto 30px auto;
+        }
+
+        .maintext {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .subtext {
+            font-size: 18px;
+        }
+
+        .wrap {
+            width: 600px;
+            margin: auto;
+        }
+
+        .mybtn {
+            margin: auto;
+            display: block;
+        }
+
+        .rate {
+            color: blue;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            q1();
+            order_List();
+        });
+
+        function q1() {
+            $('#rate-1').empty()
+            $.ajax({
+                type: "GET",
+                url: "http://spartacodingclub.shop/sparta_api/rate",
+                data: {},
+                success: function (response) {
+                    let rate = response['rate']
+                    $('#now-rate').text(rate)
+                }
+            })
+        }
+
+        function order_List() {
+            $.ajax({
+                type: "GET",
+                url: "/order",
+                data: {},
+                success: function (response) {
+                    let orders = response['all_orders']
+                    for (let i = 0; i < orders.length; i++) {
+                        let name = orders[i]['name']
+                        let numbers = orders[i]['numbers']
+                        let address = orders[i]['address']
+                        let phone_number = orders[i]['phone_number']
+
+                        let temp_html = `<tr>
+                                            <th scope="row">"${name}"</th>
+                                            <td>"${numbers}"</td>
+                                            <td>"${address}"</td>
+                                            <td>"${phone_number}"</td>
+                                        </tr>`
+                        $('#orders-box').append(temp_html)
+                    }
+                }
+            })
+        }
+
+        function postOrder() {
+            let name = $('#post_name').val()
+            let numbers = $('#post_numbers').val()
+            let address = $('#post_address').val()
+            let phone_number = $('#post_phone_number').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/order",
+                data: {name_give: name, numbers_give: numbers, address_give: address, phone_number_give: phone_number},
+                success: function (response) {
+                    alert(response['msg']);
+                    window.location.reload()
+                }
+            })
+
+        }
+    </script>
+</head>
+
+<body>
+<div class="wrap">
+    <img class="mytitle"
+         src="https://www.etro.com/on/demandware.static/-/Sites-etro_master/default/dw328ed241/images/products/view_type_prod/212P0668780408000_SF_01.jpg">
+    <div>
+        <span class="maintext">가방을 팝니다.</span>
+        <span class="subtext"> 가격: 3000원/개</span>
+        <p style="font-size: 15px">이 가방은 사실 특별한 힘을 가지고 있어요. 무엇이든 담을 수 있거든요.</p>
+        <p class="rate">달러-원 환율 : <span id="now-rate">1219.15</span></p>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">주문자 이름</span>
+        </div>
+        <input id="post_name" type="text" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default">
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">수량</label>
+        </div>
+        <select id="post_numbers" class="custom-select" id="inputGroupSelect01">
+            <option selected>-- 수량을 선택하세요 --</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
+        </div>
+        <input id="post_address" type="text" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default">
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">전화번호</span>
+        </div>
+        <input id="post_phone_number" type="text" class="form-control" aria-label="Default"
+               aria-describedby="inputGroup-sizing-default">
+    </div>
+    <button onclick="postOrder()" type="button" class="btn btn-primary mybtn">주문하기</button>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">이름</th>
+            <th scope="col">수량</th>
+            <th scope="col">주소</th>
+            <th scope="col">전화번호</th>
+        </tr>
+        </thead>
+        <tbody id="orders-box">
+
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>
