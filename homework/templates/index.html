@@ -21,6 +21,10 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
+    <meta property="og:title" content="나의 쇼핑몰"/>
+    <meta property="og:description" content="가방을 팔아요"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimage.jpg') }}"/>
+
     <title>쇼핑몰</title>
     <style>
         * {
@@ -90,10 +94,10 @@
                         let phone_number = orders[i]['phone_number']
 
                         let temp_html = `<tr>
-                                            <th scope="row">"${name}"</th>
-                                            <td>"${numbers}"</td>
-                                            <td>"${address}"</td>
-                                            <td>"${phone_number}"</td>
+                                            <th scope="row">${name}</th>
+                                            <td>${numbers}</td>
+                                            <td>${address}</td>
+                                            <td>${phone_number}W</td>
                                         </tr>`
                         $('#orders-box').append(temp_html)
                     }
